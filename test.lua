@@ -2010,33 +2010,24 @@ HDXLib:ToggleOldTabStyle(Settings.OldTabLayout)
     -- Create the layout for the elements
     local Layout = Instance.new("UIListLayout", WelcomeGraph)
     Layout.FillDirection = Enum.FillDirection.Vertical
-    Layout.HorizontalAlignment = Enum.HorizontalAlignment.Left
-    Layout.VerticalAlignment = Enum.VerticalAlignment.Top
+    Layout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    Layout.VerticalAlignment = Enum.VerticalAlignment.Center
 
-    -- Create the title (big text) at the top
-    local TitleText = Instance.new("TextLabel", WelcomeGraph)
-    TitleText.Size = UDim2.new(1, 0, 0, 40) -- Adjust height for big text
-    TitleText.Text = WelcomeSettings.Title
-    TitleText.TextSize = 24 -- Adjust for large text
-    TitleText.Font = Enum.Font.SourceSansBold
-    TitleText.TextColor3 = Color3.fromRGB(255, 255, 255)
-    TitleText.BackgroundTransparency = 1
-
-    -- Create a frame to hold the image and content
+    -- Create a frame to hold the image and content side by side
     local ContentFrame = Instance.new("Frame", WelcomeGraph)
-    ContentFrame.Size = UDim2.new(1, 0, 0, 110) -- Adjust size as needed
+    ContentFrame.Size = UDim2.new(1, 0, 0, 80) -- Adjust size as needed
     ContentFrame.BackgroundTransparency = 1
 
-    -- Layout for image and content
+    -- Layout for image and content side by side
     local ContentLayout = Instance.new("UIListLayout", ContentFrame)
     ContentLayout.FillDirection = Enum.FillDirection.Horizontal
-    ContentLayout.HorizontalAlignment = Enum.HorizontalAlignment.Left
+    ContentLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
     ContentLayout.VerticalAlignment = Enum.VerticalAlignment.Center
     ContentLayout.Padding = UDim.new(0, 10)
 
     -- Create the headshot image
     local HeadshotImage = Instance.new("ImageLabel", ContentFrame)
-    HeadshotImage.Size = UDim2.new(0, 100, 0, 100) -- Circular image size
+    HeadshotImage.Size = UDim2.new(0, 60, 0, 60) -- Circular image size
     HeadshotImage.BackgroundTransparency = 1
     HeadshotImage.ClipsDescendants = true
     HeadshotImage.ImageTransparency = 0
@@ -2051,13 +2042,24 @@ HDXLib:ToggleOldTabStyle(Settings.OldTabLayout)
 
     -- Create the content text on the right side of the image
     local ContentText = Instance.new("TextLabel", ContentFrame)
-    ContentText.Size = UDim2.new(1, -110, 1, 0) -- Adjust width based on image size
+    ContentText.Size = UDim2.new(1, -70, 1, 0) -- Adjust width based on image size
     ContentText.Text = WelcomeSettings.Content
     ContentText.TextWrapped = true
     ContentText.TextSize = 18 -- Adjust text size as needed
     ContentText.Font = Enum.Font.SourceSans
     ContentText.TextColor3 = Color3.fromRGB(255, 255, 255)
     ContentText.BackgroundTransparency = 1
+    ContentText.TextXAlignment = Enum.TextXAlignment.Left -- Align text to the left of the frame
+
+    -- Create the title (big text) below the image and content
+    local TitleText = Instance.new("TextLabel", WelcomeGraph)
+    TitleText.Size = UDim2.new(1, 0, 0, 40) -- Adjust height for big text
+    TitleText.Text = WelcomeSettings.Title
+    TitleText.TextSize = 24 -- Adjust for large text
+    TitleText.Font = Enum.Font.SourceSansBold
+    TitleText.TextColor3 = Color3.fromRGB(255, 255, 255)
+    TitleText.BackgroundTransparency = 1
+    TitleText.TextXAlignment = Enum.TextXAlignment.Center -- Center the title text
 
     -- Animate appearance (optional, depending on your theme)
     -- Example: TweenService:Create(WelcomeGraph, TweenInfo.new(0.7, Enum.EasingStyle.Quint), {BackgroundTransparency = 0}):Play()
