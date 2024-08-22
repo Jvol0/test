@@ -1993,74 +1993,82 @@ HDXLib:ToggleOldTabStyle(Settings.OldTabLayout)
         end
 
         function Tab:CreateWelcomeGraph(WelcomeSettings, SectionParent)
-            local WelcomeValue = {}
-        
-            local WelcomeGraph = Elements.Template.Paragraph:Clone() -- Clone from the template, which could be renamed if needed
-            WelcomeGraph.Title.Text = WelcomeSettings.Title
-            WelcomeGraph.Title.RichText = true
-            WelcomeGraph.Content.Text = WelcomeSettings.Content
-            WelcomeGraph.Content.RichText = true
-            WelcomeGraph.Visible = true
-            Tab.Elements[WelcomeSettings.Title] = {
-                type = "welcomegraph",
-                section = WelcomeSettings.SectionParent,
-                element = WelcomeGraph
-            }
-            if SectionParent or (WelcomeSettings.SectionParent and WelcomeSettings.SectionParent.Holder) then
-                WelcomeGraph.Parent = SectionParent.Holder or WelcomeSettings.SectionParent.Holder
-            else
-                WelcomeGraph.Parent = TabPage
-            end
-        
-            -- Set up the layout for the headshot and text
-            local Layout = Instance.new("UIListLayout", WelcomeGraph)
-            Layout.FillDirection = Enum.FillDirection.Horizontal
-            Layout.HorizontalAlignment = Enum.HorizontalAlignment.Left
-            Layout.VerticalAlignment = Enum.VerticalAlignment.Center
-            Layout.Padding = UDim.new(0, 10)
-        
-            -- Create the headshot image
-            local HeadshotImage = Instance.new("ImageLabel", WelcomeGraph)
-            HeadshotImage.Size = UDim2.new(0, 50, 0, 50) -- Circle size
-            HeadshotImage.BackgroundTransparency = 1
-            HeadshotImage.ClipsDescendants = true
-            HeadshotImage.ImageTransparency = 0
-            HeadshotImage.LayoutOrder = 1
-        
-            -- Get the player's headshot image
-            local HeadshotURL = HDXLib:GetPlayerThumbnail(WelcomeSettings.Player, "AvatarBust")
-            HeadshotImage.Image = HeadshotURL
-        
-            -- Make the image circular
-            local UICorner = Instance.new("UICorner", HeadshotImage)
-            UICorner.CornerRadius = UDim.new(1, 0) -- Fully rounded to create a circle
-        
-            -- Position and size the text container next to the headshot
-            WelcomeGraph.Title.LayoutOrder = 2
-            WelcomeGraph.Content.LayoutOrder = 3
-        
-            -- Modify existing transparency and styling settings
-            WelcomeGraph.BackgroundTransparency = 1
-            WelcomeGraph.UIStroke.Transparency = 1
-            WelcomeGraph.Title.TextTransparency = 1
-            WelcomeGraph.Content.TextTransparency = 1
-        
-            WelcomeGraph.BackgroundColor3 = SelectedTheme.SecondaryElementBackground
-            WelcomeGraph.UIStroke.Color = SelectedTheme.SecondaryElementStroke
-        
-            -- Animate appearance
-            TweenService:Create(WelcomeGraph, TweenInfo.new(0.7, Enum.EasingStyle.Quint), {BackgroundTransparency = 0}):Play()
-            TweenService:Create(WelcomeGraph.UIStroke, TweenInfo.new(0.7, Enum.EasingStyle.Quint), {Transparency = 0}):Play()
-            TweenService:Create(WelcomeGraph.Title, TweenInfo.new(0.7, Enum.EasingStyle.Quint), {TextTransparency = 0}):Play()    
-            TweenService:Create(WelcomeGraph.Content, TweenInfo.new(0.7, Enum.EasingStyle.Quint), {TextTransparency = 0}):Play()    
-        
-            function WelcomeValue:Set(NewWelcomeSettings)
-                WelcomeGraph.Title.Text = NewWelcomeSettings.Title
-                WelcomeGraph.Content.Text = NewWelcomeSettings.Content
-            end
-        
-            return WelcomeValue
-        end
+    local WelcomeValue = {}
+
+    local WelcomeGraph = Instance.new("Frame")
+    WelcomeGraph.Size = UDim2.new(1, 0, 0, 150) -- Adjust height as needed
+    WelcomeGraph.BackgroundTransparency = 1
+    WelcomeGraph.Visible = true
+    WelcomeGraph.Parent = SectionParent or TabPage
+
+    Tab.Elements[WelcomeSettings.Title] = {
+        type = "welcomegraph",
+        section = WelcomeSettings.SectionParent,
+        element = WelcomeGraph
+    }
+
+    -- Create the layout for the elements
+    local Layout = Instance.new("UIListLayout", WelcomeGraph)
+    Layout.FillDirection = Enum.FillDirection.Vertical
+    Layout.HorizontalAlignment = Enum.HorizontalAlignment.Left
+    Layout.VerticalAlignment = Enum.VerticalAlignment.Top
+
+    -- Create the title (big text) at the top
+    local TitleText = Instance.new("TextLabel", WelcomeGraph)
+    TitleText.Size = UDim2.new(1, 0, 0, 40) -- Adjust height for big text
+    TitleText.Text = WelcomeSettings.Title
+    TitleText.TextSize = 24 -- Adjust for large text
+    TitleText.Font = Enum.Font.SourceSansBold
+    TitleText.TextColor3 = Color3.fromRGB(255, 255, 255)
+    TitleText.BackgroundTransparency = 1
+
+    -- Create a frame to hold the image and content
+    local ContentFrame = Instance.new("Frame", WelcomeGraph)
+    ContentFrame.Size = UDim2.new(1, 0, 0, 110) -- Adjust size as needed
+    ContentFrame.BackgroundTransparency = 1
+
+    -- Layout for image and content
+    local ContentLayout = Instance.new("UIListLayout", ContentFrame)
+    ContentLayout.FillDirection = Enum.FillDirection.Horizontal
+    ContentLayout.HorizontalAlignment = Enum.HorizontalAlignment.Left
+    ContentLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+    ContentLayout.Padding = UDim.new(0, 10)
+
+    -- Create the headshot image
+    local HeadshotImage = Instance.new("ImageLabel", ContentFrame)
+    HeadshotImage.Size = UDim2.new(0, 100, 0, 100) -- Circular image size
+    HeadshotImage.BackgroundTransparency = 1
+    HeadshotImage.ClipsDescendants = true
+    HeadshotImage.ImageTransparency = 0
+
+    -- Get the player's headshot image
+    local HeadshotURL = HDXLib:GetPlayerThumbnail(WelcomeSettings.Player, "AvatarBust")
+    HeadshotImage.Image = HeadshotURL
+
+    -- Make the image circular
+    local UICorner = Instance.new("UICorner", HeadshotImage)
+    UICorner.CornerRadius = UDim.new(1, 0) -- Fully rounded for a circle
+
+    -- Create the content text on the right side of the image
+    local ContentText = Instance.new("TextLabel", ContentFrame)
+    ContentText.Size = UDim2.new(1, -110, 1, 0) -- Adjust width based on image size
+    ContentText.Text = WelcomeSettings.Content
+    ContentText.TextWrapped = true
+    ContentText.TextSize = 18 -- Adjust text size as needed
+    ContentText.Font = Enum.Font.SourceSans
+    ContentText.TextColor3 = Color3.fromRGB(255, 255, 255)
+    ContentText.BackgroundTransparency = 1
+
+    -- Animate appearance (optional, depending on your theme)
+    -- Example: TweenService:Create(WelcomeGraph, TweenInfo.new(0.7, Enum.EasingStyle.Quint), {BackgroundTransparency = 0}):Play()
+
+    function WelcomeValue:Set(NewWelcomeSettings)
+        TitleText.Text = NewWelcomeSettings.Title
+        ContentText.Text = NewWelcomeSettings.Content
+    end
+
+    return WelcomeValue
+end
 
         -- Input
         function Tab:CreateInput(InputSettings)
